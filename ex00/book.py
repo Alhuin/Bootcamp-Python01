@@ -6,6 +6,12 @@ class AddRecipeError(Exception):
     pass
 
 
+class InitBookError(Exception):
+    def __init__(self, field):
+        self.message = f"Recipe Book Error: Invalid {field} field."
+    pass
+
+
 class GetRecipeError(Exception):
     messages = {
         "name": "Unknown recipe name",
@@ -24,6 +30,11 @@ class Book:
     :param recipes_list: A 3 keys dict ["starter", "lunch", "dessert"]
     """
     def __init__(self, name, recipes_list):
+        if isinstance(name, str) is False or name == "":
+            raise InitBookError("name")
+        elif isinstance(recipes_list, dict) is False:
+            raise InitBookError("recipes_list")
+
         self.name: str = name
         self.recipes_list: dict = recipes_list
         self.last_update: datetime = datetime.now()

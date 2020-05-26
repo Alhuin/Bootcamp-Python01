@@ -1,14 +1,6 @@
 class InitRecipeError(Exception):
-    messages = {
-        "name": "Name can't be empty",
-        "cooking_lvl": "Cooking level must be in between 1 and 5",
-        "cooking_time": "Cooking time can't be less than 1 minute",
-        "ingredients": "Ingredients' list can't be empty",
-        "recipe_type": "Recipe_type must be in ['starter', 'lunch', 'dessert']"
-    }
-
     def __init__(self, field):
-        self.message = f"Recipe Init Error: {self.messages[field]}."
+        self.message = f"Recipe Init Error: Invalid {field} field."
     pass
 
 
@@ -24,15 +16,17 @@ class Recipe:
     """
     def __init__(self, name, cooking_lvl, cooking_time, ingredients,
                  description, recipe_type):
-        if name == "":
+        if isinstance(name, str) is False or name == "":
             raise InitRecipeError("name")
-        elif cooking_lvl < 1 or cooking_lvl > 5:
+        elif isinstance(cooking_lvl, int) is False \
+                or cooking_lvl < 1 or cooking_lvl > 5:
             raise InitRecipeError("cooking_lvl")
-        elif cooking_time < 0:
+        elif isinstance(cooking_time, int) is False or cooking_time < 0:
             raise InitRecipeError("cooking_time")
-        elif len(ingredients) == 0:
+        elif isinstance(ingredients, list) is False or len(ingredients) == 0:
             raise InitRecipeError("ingredients")
-        elif recipe_type not in ["starter", "lunch", "dessert"]:
+        elif isinstance(recipe_type, str) is False \
+                or recipe_type not in ["starter", "lunch", "dessert"]:
             raise InitRecipeError("recipe_type")
 
         self.name: str = name

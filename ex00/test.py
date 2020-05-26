@@ -1,6 +1,6 @@
 import unittest
 
-from book import Book, GetRecipeError, AddRecipeError
+from book import Book, GetRecipeError, AddRecipeError, InitBookError
 from recipe import Recipe, InitRecipeError
 
 
@@ -9,6 +9,17 @@ class TestInitRecipe(unittest.TestCase):
         with self.assertRaises(InitRecipeError):
             Recipe(
                 name="",
+                cooking_lvl=2,
+                cooking_time=20,
+                ingredients=["sugar", "flour"],
+                description="",
+                recipe_type="starter"
+            )
+
+    def test_wrong_name_type(self):
+        with self.assertRaises(InitRecipeError):
+            Recipe(
+                name=20,
                 cooking_lvl=2,
                 cooking_time=20,
                 ingredients=["sugar", "flour"],
@@ -27,12 +38,34 @@ class TestInitRecipe(unittest.TestCase):
                 recipe_type="starter"
             )
 
+    def test_wrong_cooking_lvl_type(self):
+        with self.assertRaises(InitRecipeError):
+            Recipe(
+                name="recipe_one",
+                cooking_lvl="one",
+                cooking_time=20,
+                ingredients=["sugar", "flour"],
+                description="",
+                recipe_type="starter"
+            )
+
     def test_negative_cooking_time(self):
         with self.assertRaises(InitRecipeError):
             Recipe(
                 name="recipe_one",
                 cooking_lvl=2,
                 cooking_time=-1,
+                ingredients=["sugar", "flour"],
+                description="",
+                recipe_type="starter"
+            )
+
+    def test_wrong_cooking_time_type(self):
+        with self.assertRaises(InitRecipeError):
+            Recipe(
+                name="recipe_one",
+                cooking_lvl=2,
+                cooking_time="vingt",
                 ingredients=["sugar", "flour"],
                 description="",
                 recipe_type="starter"
@@ -45,6 +78,17 @@ class TestInitRecipe(unittest.TestCase):
                 cooking_lvl=2,
                 cooking_time=20,
                 ingredients=[],
+                description="",
+                recipe_type="starter"
+            )
+
+    def test_wrong_ingredients_type(self):
+        with self.assertRaises(InitRecipeError):
+            Recipe(
+                name="recipe_one",
+                cooking_lvl=2,
+                cooking_time=20,
+                ingredients="sugar",
                 description="",
                 recipe_type="starter"
             )
@@ -75,6 +119,29 @@ class TestInitRecipe(unittest.TestCase):
         self.assertEqual(recipe.ingredients, ["sugar", "flour"])
         self.assertEqual(recipe.description, "")
         self.assertEqual(recipe.recipe_type, "starter")
+
+
+class TestInitBook(unittest.TestCase):
+    def test_wrong_name_type(self):
+        with self.assertRaises(InitBookError):
+            Book(
+                name=20,
+                recipes_list=dict({"starter": {}, "lunch": {}, "dessert": {}})
+            )
+
+    def test_empty_name(self):
+        with self.assertRaises(InitBookError):
+            Book(
+                name="",
+                recipes_list=dict({"starter": {}, "lunch": {}, "dessert": {}})
+            )
+
+    def test_wrong_recipes_list_type(self):
+        with self.assertRaises(InitBookError):
+            Book(
+                name=20,
+                recipes_list=["starter", "lunch", "dessert"]
+            )
 
 
 class TestBookMethods(unittest.TestCase):
