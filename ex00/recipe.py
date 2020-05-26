@@ -1,3 +1,17 @@
+class InitRecipeError(Exception):
+    messages = {
+        "name": "Name can't be empty",
+        "cooking_lvl": "Cooking level must be in between 1 and 5",
+        "cooking_time": "Cooking time can't be less than 1 minute",
+        "ingredients": "Ingredients' list can't be empty",
+        "recipe_type": "Recipe_type must be in ['starter', 'lunch', 'dessert']"
+    }
+
+    def __init__(self, field):
+        self.message = f"Recipe Init Error: {self.messages[field]}."
+    pass
+
+
 class Recipe:
     """A representation of a recipe.
 
@@ -10,13 +24,16 @@ class Recipe:
     """
     def __init__(self, name, cooking_lvl, cooking_time, ingredients,
                  description, recipe_type):
-        if name == ""\
-                or cooking_lvl < 1\
-                or cooking_lvl > 5\
-                or cooking_time < 0\
-                or len(ingredients) == 0\
-                or recipe_type not in ["starter", "lunch", "dessert"]:
-            raise ValueError
+        if name == "":
+            raise InitRecipeError("name")
+        elif cooking_lvl < 1 or cooking_lvl > 5:
+            raise InitRecipeError("cooking_lvl")
+        elif cooking_time < 0:
+            raise InitRecipeError("cooking_time")
+        elif len(ingredients) == 0:
+            raise InitRecipeError("ingredients")
+        elif recipe_type not in ["starter", "lunch", "dessert"]:
+            raise InitRecipeError("recipe_type")
 
         self.name: str = name
         self.cooking_lvl: int = cooking_lvl
@@ -33,14 +50,3 @@ class Recipe:
                + f"\tAverage cooking time:\t{self.cooking_time} minutes\n"\
                + f"\tingredients:\t\t{self.ingredients}\n"
 
-
-r = Recipe(
-    "test",
-    2,
-    30,
-    ['eggs', "flour"],
-    "description",
-    "starter"
-)
-
-print(str(r))

@@ -1,0 +1,59 @@
+from datetime import datetime
+
+
+class AddRecipeError(Exception):
+    pass
+
+
+class GetRecipeError(Exception):
+    messages = {
+        "name": "Unknown recipe name",
+        "types": "Unknown recipe type",
+    }
+
+    def __init__(self, type):
+        self.message = f"Get Recipe Error: {self.messages[type]}."
+    pass
+
+
+class Book:
+    """A representation of a book.
+
+    :param name: The book's name.
+    :param recipes_list: A 3 keys dict ["starter", "lunch", "dessert"]
+    """
+    def __init__(self, name, recipes_list):
+        self.name: str = name
+        self.recipes_list: dict = recipes_list
+        self.last_update: datetime = datetime.now()
+        self.creation_date: datetime = datetime.now()
+
+    def __str__(self):
+        return f"{self.name.capitalize()} book:\n" \
+               + f"\tRecipes:\t{[key for key in self.recipes_list.keys()]}\n" \
+               + f"\tCreation:\t{self.creation_date}\n" \
+               + f"\tLast Update:\t{self.last_update}\n"
+
+    def get_recipe_by_name(self, name):
+        """ Print a recipe with the 'name' and return the instance """
+        for recipe_type in self.recipes_list:
+            if name in self.recipes_list[recipe_type]:
+                recipe = self.recipes_list[recipe_type][name]
+                print(recipe)
+                return recipe
+
+        raise GetRecipeError("name")
+
+    def get_recipes_by_types(self, recipe_type):
+        """ Get all recipe names for a given recipe_type """
+        try:
+            return list(self.recipes_list[recipe_type].keys())
+        except KeyError:
+            raise GetRecipeError("types")
+
+    def add_recipe(self, recipe):
+        """ Add a recipe to the book and update last_update """
+        if recipe.name not in self.recipes_list[recipe.recipe_type]:
+            self.recipes_list[recipe.recipe_type][recipe.name] = recipe
+        else:
+            raise AddRecipeError
