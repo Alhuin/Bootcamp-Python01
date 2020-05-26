@@ -124,24 +124,11 @@ class TestInitRecipe(unittest.TestCase):
 class TestInitBook(unittest.TestCase):
     def test_wrong_name_type(self):
         with self.assertRaises(InitBookError):
-            Book(
-                name=20,
-                recipes_list=dict({"starter": {}, "lunch": {}, "dessert": {}})
-            )
+            Book(name=20)
 
     def test_empty_name(self):
         with self.assertRaises(InitBookError):
-            Book(
-                name="",
-                recipes_list=dict({"starter": {}, "lunch": {}, "dessert": {}})
-            )
-
-    def test_wrong_recipes_list_type(self):
-        with self.assertRaises(InitBookError):
-            Book(
-                name=20,
-                recipes_list=["starter", "lunch", "dessert"]
-            )
+            Book(name="")
 
 
 class TestBookMethods(unittest.TestCase):
@@ -154,14 +141,7 @@ class TestBookMethods(unittest.TestCase):
             description="",
             recipe_type="starter"
         )
-        self.cook_book = Book(
-            name="Test cookBook",
-            recipes_list=dict({
-                "starter": {},
-                "lunch": {},
-                "dessert": {},
-            }),
-        )
+        self.cook_book = Book(name="Test cookBook")
 
     def test_add_recipe(self):
         self.cook_book.add_recipe(self.recipe_one)

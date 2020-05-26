@@ -27,16 +27,13 @@ class Book:
     """A representation of a book.
 
     :param name: The book's name.
-    :param recipes_list: A 3 keys dict ["starter", "lunch", "dessert"]
     """
-    def __init__(self, name, recipes_list):
+    def __init__(self, name):
         if isinstance(name, str) is False or name == "":
             raise InitBookError("name")
-        elif isinstance(recipes_list, dict) is False:
-            raise InitBookError("recipes_list")
 
         self.name: str = name
-        self.recipes_list: dict = recipes_list
+        self.recipes_list: dict = {"starter": {}, "lunch": {}, "dessert": {}}
         self.last_update: datetime = datetime.now()
         self.creation_date: datetime = datetime.now()
 
