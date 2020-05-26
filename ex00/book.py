@@ -1,4 +1,5 @@
 from datetime import datetime
+from recipe import Recipe
 
 
 class AddRecipeError(Exception):
@@ -11,8 +12,8 @@ class GetRecipeError(Exception):
         "types": "Unknown recipe type",
     }
 
-    def __init__(self, type):
-        self.message = f"Get Recipe Error: {self.messages[type]}."
+    def __init__(self, query):
+        self.message = f"Get Recipe Error: {self.messages[query]}."
     pass
 
 
@@ -35,7 +36,7 @@ class Book:
                + f"\tLast Update:\t{self.last_update}\n"
 
     def get_recipe_by_name(self, name):
-        """ Print a recipe with the 'name' and return the instance """
+        """ Print a recipe with the name `name` and return the instance """
         for recipe_type in self.recipes_list:
             if name in self.recipes_list[recipe_type]:
                 recipe = self.recipes_list[recipe_type][name]
@@ -53,6 +54,8 @@ class Book:
 
     def add_recipe(self, recipe):
         """ Add a recipe to the book and update last_update """
+        if isinstance(recipe, Recipe) is False:
+            raise AddRecipeError
         if recipe.name not in self.recipes_list[recipe.recipe_type]:
             self.recipes_list[recipe.recipe_type][recipe.name] = recipe
         else:

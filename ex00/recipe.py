@@ -49,4 +49,3 @@ class Recipe:
                + f"\tDifficulty:\t\t{self.cooking_lvl}\n"\
                + f"\tAverage cooking time:\t{self.cooking_time} minutes\n"\
                + f"\tingredients:\t\t{self.ingredients}\n"
-

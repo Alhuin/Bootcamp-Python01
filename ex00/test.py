@@ -98,8 +98,6 @@ class TestBookMethods(unittest.TestCase):
 
     def test_add_recipe(self):
         self.cook_book.add_recipe(self.recipe_one)
-        # The cook_book should have added the recipe
-        # in the right category of its recipes' list
         self.assertDictEqual(
             self.cook_book.recipes_list[self.recipe_one.recipe_type],
             dict({self.recipe_one.name: self.recipe_one})
@@ -107,6 +105,9 @@ class TestBookMethods(unittest.TestCase):
         with self.assertRaises(AddRecipeError):
             self.cook_book.add_recipe(self.recipe_one)
             self.cook_book.add_recipe(self.recipe_one)
+
+        with self.assertRaises(AddRecipeError):
+            self.cook_book.add_recipe("")
 
     def test_get_recipe_by_name(self):
         with self.assertRaises(GetRecipeError):
