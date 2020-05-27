@@ -82,7 +82,7 @@ class TestMatrixInit(unittest.TestCase):
 class TestMatrixOperations(unittest.TestCase):
     def setUp(self):
         self.m = Matrix([
-            [1.0, 2.0, 3.0],
+            [1.0, 2.0],
             [3.0, 4.0]
         ])
         self.m1 = Matrix((2, 5))
