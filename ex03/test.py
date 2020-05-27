@@ -80,7 +80,7 @@ class TestMatrixInit(unittest.TestCase):
 class TestMatrixOperations(unittest.TestCase):
     def setUp(self):
         self.m = Matrix([
-            [1.0, 2.0, 3.0],
+            [1.0, 2.0],
             [3.0, 4.0]
         ])
         self.m1 = Matrix((2, 5))
@@ -132,10 +132,6 @@ class TestMatrixOperations(unittest.TestCase):
             [17.0, 39.0]
         )
         self.assertEqual(m3.size, 2)
-
-    def test_rtruediv(self):
-        m3 = self.m / self.m2
-        print(m3)
 
 
 if __name__ == "__main__":

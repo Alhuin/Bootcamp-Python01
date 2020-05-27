@@ -31,9 +31,12 @@ def isnum(obj):
     return type(obj) == int or type(obj) == float
 
 
-def is_2d_num_list(lst):
+def is_rect_2d_num_list(lst):
+    row_len = len(lst[0])
     for el in lst:
-        if not isinstance(el, list) or not all(isnum(n) for n in el):
+        if not isinstance(el, list)\
+                or not all(isnum(n) for n in el)\
+                or len(el) != row_len:
             return False
     return True
 
@@ -45,7 +48,7 @@ class Matrix:
 
         if type(arg) == list and tup is None:
             # Matrix([[], []])
-            if not is_2d_num_list(arg):
+            if not is_rect_2d_num_list(arg):
                 raise InitMatrixError("Wrong list type.")
             self.shape = (len(arg), len(arg[0]))
             self.data = [
@@ -66,8 +69,9 @@ class Matrix:
         elif type(arg) == list and tup is not None \
                 and len(tup) == 2 and all(isinstance(n, int) for n in tup):
             # Matrix([[], []], (2, 1))
-            if is_2d_num_list(arg):
+            if is_rect_2d_num_list(arg):
                 if len(arg) == tup[0] and len(arg[1]) == tup[1]:
+                    self.shape = (tup[0], tup[1])
                     self.data = [
                         [
                             float(arg[i][j])
@@ -75,7 +79,6 @@ class Matrix:
                         ]
                         for i in range(self.shape[0])
                     ]
-                    self.shape = (tup[0], tup[1])
                 else:
                     raise InitMatrixError("Matrix shape diff from tuple.")
             else:
@@ -130,6 +133,8 @@ class Matrix:
 
     def __truediv__(self, other):
         if isnum(other):
+            if other == 0:
+                raise ForbiddenOperation("Division by zero.")
             return Matrix([
                 [
                     self.data[i][j] / other
