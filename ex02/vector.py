@@ -1,12 +1,11 @@
 class InitVectorError(Exception):
-    pass
+    def __init__(self):
+        self.message = f"Init Vector error: Wrong type sent to init method."
 
 
 class ForbiddenOperation(Exception):
     def __init__(self, operation):
-        self.message = f"Forbidden Operation: Tried to {operation}."
-
-    pass
+        self.message = f'Forbidden Operation: Tried to {operation}.'
 
 
 def isnum(obj):
@@ -18,10 +17,15 @@ class Vector:
         if type(arg) == int:
             self.values = [round(float(i), 1) for i in range(0, arg)]
             self.size = arg
-        elif type(arg) == tuple:
+        elif type(arg) == tuple and len(arg) == 2:
+            if not all(isinstance(a, int) for a in arg):
+                raise InitVectorError
             self.values = [round(float(i), 1) for i in range(arg[0], arg[1])]
             self.size = arg[1] - arg[0]
         elif type(arg) == list:
+            if not all(isinstance(a, int) or isinstance(a, float)
+                       for a in arg):
+                raise InitVectorError
             self.values = [round(float(i), 1) for i in arg]
             self.size = len(arg)
         else:
@@ -29,65 +33,51 @@ class Vector:
 
     def __add__(self, other):
         """ Addition between 2 vectors """
-        if isnum(other):
-            if self.size == 1:    # cannot add scalar to vector
-                other = Vector([other])
-            else:
-                raise ForbiddenOperation("add a vector to a scalar.")
-        if self.size == other.size:
-            return Vector([self.values[i] + other.values[i]
-                           for i in range(self.size)])
-        else:
+        if isinstance(other, Vector):
+            if self.size == other.size:
+                return Vector([self.values[i] + other.values[i]
+                               for i in range(self.size)])
             raise ForbiddenOperation("add 2 vectors of diffrent sizes")
+        return NotImplemented
 
     def __radd__(self, other):
-        if isnum(other):    # cannot add vector to scalar
-            other = Vector([other])
-        return other + self
+        if isinstance(other, Vector):
+            return self + other
+        return NotImplemented
 
     def __sub__(self, other):
         """ Substraction between 2 vectors """
-        if isnum(other):
-            if self.size == 1:    # cannot sub scalar to vector
-                other = Vector([other])
-            else:
-                raise ForbiddenOperation("sub a scalar to a vector")
-        if self.size == other.size:
-            return Vector([self.values[i] - other.values[i]
-                           for i in range(self.size)])
-        else:
+        if isinstance(other, Vector):
+            if self.size == other.size:
+                return Vector([self.values[i] - other.values[i]
+                               for i in range(self.size)])
             raise ForbiddenOperation("sub two vectors of different sizes")
+        return NotImplemented
 
     def __rsub__(self, other):
-        if isnum(other):    # cannot sub vector to scalar
-            other = Vector([other])
-        return other - self
+        if isinstance(other, Vector):
+            if self.size == other.size:
+                return Vector([other.values[i] - self.values[i]
+                               for i in range(self.size)])
+            raise ForbiddenOperation("sub two vectors of different sizes")
+        return NotImplemented
 
     def __truediv__(self, other):
-        try:
-            if isnum(other):
-                return Vector(
-                    [self.values[i] / other for i in range(self.size)]
-                )
-            elif isnum(self) and isinstance(other, Vector):
-                return Vector(
-                    [self / other.values[i] for i in range(other.size)]
-                )
-        except ZeroDivisionError:
-            raise ForbiddenOperation("divide by 0.")
+        if isnum(other):
+            if other == 0:
+                raise ForbiddenOperation("divide by 0")
+            return Vector([value / other for value in self.values])
+        return NotImplemented
 
     def __rtruediv__(self, other):
-        if isinstance(other, Vector):
-            return other / self
-        else:
-            raise ForbiddenOperation("divide a scalar by a vector.")
+        return NotImplemented
 
     def __mul__(self, other):
-        if isnum(other):
+        if isnum(other):    # return a vector
             return Vector(
                 [self.values[i] * other for i in range(self.size)]
             )
-        elif isinstance(other, Vector):
+        elif isinstance(other, Vector):     # return a scalar
             if other.size == self.size:
                 sum_of_products = 0
                 products = [self.values[i] * other.values[i]
@@ -97,12 +87,13 @@ class Vector:
                 return sum_of_products
             else:
                 raise ForbiddenOperation("mult vectors of diferrent sizes.")
+        else:
+            return NotImplemented
 
     def __rmul__(self, other):
-        if isnum(other):
+        if isnum(other) or isinstance(other, Vector):
             return self * other
-        elif isinstance(other, Vector):
-            return other * self
+        return NotImplemented
 
     def __str__(self):
         return f"{self.values}"

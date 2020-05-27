@@ -3,7 +3,6 @@ import unittest
 from vector import Vector, ForbiddenOperation
 
 
-# Pas réussi a faire marcher pytest
 class TestVector(unittest.TestCase):
 
     # initiation
@@ -32,22 +31,10 @@ class TestVector(unittest.TestCase):
         self.assertListEqual(v3.values, [10.0, 12.0, 14.0, 16.0, 18.0])
         self.assertEqual(v3.size, 5)
 
-    def test_add_scalar(self):
-        #  Should work if we create a 1*1 vector from the scalar
-        v3 = Vector([3]) + 5
-        self.assertListEqual(v3.values, [8])
-        self.assertEqual(v3.size, 1)
-
     def test_sub_vector(self):
         v3 = self.v - self.v1
         self.assertListEqual(v3.values, [-10, -10, -10, -10, -10])
         self.assertEqual(v3.size, 5)
-
-    def test_sub_scalar(self):
-        #  Should work if we create a 1*1 vector from the scalar
-        v3 = 5 - Vector([3])
-        self.assertListEqual(v3.values, [2])
-        self.assertEqual(v3.size, 1)
 
     def test_truediv(self):
         with self.assertRaises(ForbiddenOperation):
@@ -70,27 +57,47 @@ class TestVector(unittest.TestCase):
         self.assertListEqual(v3.values, [0.0, 2.5, 5.0, 7.5, 10.0])
         self.assertEqual(v3.size, 5)
 
-    # Forbidden operations
+    # Forbidden operations & TypeErrors
 
-    def test_add_scalar_Error(self):
+    def test_add_different_size_vectors(self):
         with self.assertRaises(ForbiddenOperation):
+            v3 = self.v2 + self.v
+
+    def test_add_scalar(self):
+        with self.assertRaises(TypeError):
             v3 = self.v2 + 1
 
-    def test_radd_Error(self):
-        with self.assertRaises(ForbiddenOperation):
+    def test_add_wrong_type(self):
+        with self.assertRaises(TypeError):
+            v3 = self.v2 + (5, 2)
+
+    def test_radd_scalar(self):
+        with self.assertRaises(TypeError):
             v3 = 3 + self.v2
 
-    def test_sub_scalar_Error(self):
+    def test_radd_wrong_type(self):
+        with self.assertRaises(TypeError):
+            v3 = (5, 12) + self.v2
+
+    def test_sub_different_size_vectors(self):
         with self.assertRaises(ForbiddenOperation):
+            v3 = self.v2 - self.v
+
+    def test_sub_scalar(self):
+        with self.assertRaises(TypeError):
             v3 = self.v2 - 1
 
-    def test_rsub_Error(self):
-        with self.assertRaises(ForbiddenOperation):
+    def test_sub_wrong_type(self):
+        with self.assertRaises(TypeError):
+            v3 = self.v2 - (5, 2)
+
+    def test_rsub_scalar(self):
+        with self.assertRaises(TypeError):
             v3 = 3 - self.v2
 
-    def test_rtruediv_Error(self):
-        with self.assertRaises(ForbiddenOperation):
-            v3 = 2 / self.v1
+    def test_rsub_wrong_type(self):
+        with self.assertRaises(TypeError):
+            v3 = (5, 12) - self.v2
 
 
 if __name__ == "__main__":
