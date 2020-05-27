@@ -80,7 +80,7 @@ class TestMatrixOperations(unittest.TestCase):
     def setUp(self):
         self.m = Matrix([
             [1.0, 2.0],
-            [3.0, 4.0]
+            [3.0, 4.0],
         ])
         self.m1 = Matrix((2, 5))
         self.m2 = Matrix(
@@ -144,7 +144,7 @@ class TestMatrixOperations(unittest.TestCase):
         m3 = self.m * self.v
         self.assertListEqual(
             m3.values,
-            [17.0, 39.0]
+            [15.0, 42.0]
         )
         self.assertEqual(m3.size, 2)
 
@@ -152,9 +152,9 @@ class TestMatrixOperations(unittest.TestCase):
         m3 = self.m * self.v
         self.assertListEqual(
             m3.values,
-            [17.0, 39.0]
+            [15.0, 42.0]
         )
-        self.assertEqual(m3.size, 2) 
+        self.assertEqual(m3.size, 2)
         m3 = self.m * self.m2
         self.assertListEqual(
             m3.data,
@@ -177,8 +177,8 @@ class TestMatrixOperations(unittest.TestCase):
                 [1.5, 2.0]
             ]
         )
-        self.assertTupleEqual(m3.shape, (2,2)) 
-        
+        self.assertTupleEqual(m3.shape, (2,2))
+
     def test_rtruediv(self):
         m3 = self.m / 1
 
@@ -191,7 +191,7 @@ class TestMatrixOperations(unittest.TestCase):
     def test_radd_errors(self):
         with self.assertRaises(TypeError):
             self.m + "string"
-            
+
     def test_sub_errors(self):
         with self.assertRaises(TypeError):
             self.m - "string"
@@ -200,7 +200,7 @@ class TestMatrixOperations(unittest.TestCase):
 
     def test_rsub_errors(self):
         with self.assertRaises(TypeError):
-            self.m + "string" 
+            self.m + "string"
         with self.assertRaises(ForbiddenOperation):
             self.m - self.m1
 
@@ -219,7 +219,7 @@ class TestMatrixOperations(unittest.TestCase):
     def test_truediv_errors(self):
         with self.assertRaises(TypeError):
             self.m1 / "string"
-            
+
 
     def test_rtruediv_errors(self):
         with self.assertRaises(TypeError):

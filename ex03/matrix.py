@@ -163,7 +163,7 @@ class Matrix:
                 for i in range(self.shape[0]):
                     sum_of_products = 0
                     for j in range(self.shape[1]):
-                        sum_of_products += self.data[i][j] * other.values[j]
+                        sum_of_products += self.data[i][j] * other.values[i]
                     new.values[i] = sum_of_products
                 return new
             raise ForbiddenOperation("Can't multiply matrix by vector: "
