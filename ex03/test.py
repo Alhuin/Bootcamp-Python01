@@ -6,8 +6,11 @@ try:
     from ex02.vector import Vector
     from matrix import Matrix, InitMatrixError, ForbiddenOperation
 except ModuleNotFoundError:
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/ex02")
+    sys.path.append(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__)))
+    )
+    sys.path.append(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))) + "/ex02")
     from ex02.vector import Vector
     from matrix import Matrix, InitMatrixError, ForbiddenOperation
 
@@ -15,7 +18,6 @@ except ModuleNotFoundError:
 class TestMatrixInit(unittest.TestCase):
 
     # Good Init
-
     def setUp(self):
         self.m = Matrix([
             [1.0, 2.0, 3.5, 4.0, 5.0],
@@ -80,7 +82,7 @@ class TestMatrixInit(unittest.TestCase):
 class TestMatrixOperations(unittest.TestCase):
     def setUp(self):
         self.m = Matrix([
-            [1.0, 2.0],
+            [1.0, 2.0, 3.0],
             [3.0, 4.0]
         ])
         self.m1 = Matrix((2, 5))
@@ -101,8 +103,24 @@ class TestMatrixOperations(unittest.TestCase):
         )
         self.assertTupleEqual(m3.shape, (2, 2))
 
+    def test_radd_matrix(self):
+        m3 = self.m.__radd__(self.m2)
+        self.assertListEqual(
+            m3.data,
+            [[6.0, 8.0], [10.0, 12.0]]
+        )
+        self.assertTupleEqual(m3.shape, (2, 2))
+
     def test_sub_matrix(self):
         m3 = self.m2 - self.m
+        self.assertListEqual(
+            m3.data,
+            [[4.0, 4.0], [4.0, 4.0]]
+        )
+        self.assertTupleEqual(m3.shape, (2, 2))
+
+    def test_rsub_matrix(self):
+        m3 = self.m.__rsub__(self.m2)
         self.assertListEqual(
             m3.data,
             [[4.0, 4.0], [4.0, 4.0]]
@@ -132,6 +150,68 @@ class TestMatrixOperations(unittest.TestCase):
             [17.0, 39.0]
         )
         self.assertEqual(m3.size, 2)
+
+    def test_rmul(self):
+        m3 = self.m * self.v
+        self.assertListEqual(
+            m3.values,
+            [17.0, 39.0]
+        )
+        self.assertEqual(m3.size, 2)
+        m3 = self.m * self.m2
+        self.assertListEqual(
+            m3.data,
+            [[19.0, 22.0], [43.0, 50.0]]
+        )
+        self.assertTupleEqual(m3.shape, (2, 2))
+        m3 = self.m * 2
+        self.assertListEqual(
+            m3.data,
+            [[2.0, 4.0], [6.0, 8.0]]
+        )
+        self.assertTupleEqual(m3.shape, (2, 2))
+
+    def test_rtruediv(self):
+        m3 = self.m / self.m2
+        print(m3)
+
+    # Errors
+
+    def test_add_errors(self):
+        with self.assertRaises(ForbiddenOperation):
+            self.m + self.m1
+
+    def test_radd_errors(self):
+        with self.assertRaises(TypeError):
+            self.m + "string"
+
+    def test_sub_errors(self):
+        with self.assertRaises(TypeError):
+            self.m - "string"
+        with self.assertRaises(ForbiddenOperation):
+            self.m - self.m1
+
+    def test_rsub_errors(self):
+        with self.assertRaises(TypeError):
+            self.m + "string"
+        with self.assertRaises(ForbiddenOperation):
+            self.m - self.m1
+
+    def test_mul_errors(self):
+        with self.assertRaises(ForbiddenOperation):
+            pass
+
+    def test_rmul_errors(self):
+        with self.assertRaises(ForbiddenOperation):
+            pass
+
+    def test_truediv_errors(self):
+        with self.assertRaises(ForbiddenOperation):
+            pass
+
+    def test_rtruediv_errors(self):
+        with self.assertRaises(ForbiddenOperation):
+            pass
 
 
 if __name__ == "__main__":
