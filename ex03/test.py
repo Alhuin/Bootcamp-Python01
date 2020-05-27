@@ -6,11 +6,8 @@ try:
     from ex02.vector import Vector
     from matrix import Matrix, InitMatrixError, ForbiddenOperation
 except ModuleNotFoundError:
-    sys.path.append(os.path.dirname(os.path.dirname(
-        os.path.abspath(__file__)))
-    )
-    sys.path.append(os.path.dirname(os.path.dirname(
-        os.path.abspath(__file__))) + "/ex02")
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/ex02")
     from ex02.vector import Vector
     from matrix import Matrix, InitMatrixError, ForbiddenOperation
 
@@ -157,7 +154,7 @@ class TestMatrixOperations(unittest.TestCase):
             m3.values,
             [17.0, 39.0]
         )
-        self.assertEqual(m3.size, 2)
+        self.assertEqual(m3.size, 2) 
         m3 = self.m * self.m2
         self.assertListEqual(
             m3.data,
@@ -171,9 +168,19 @@ class TestMatrixOperations(unittest.TestCase):
         )
         self.assertTupleEqual(m3.shape, (2, 2))
 
+    def test_truediv(self):
+        m3 = self.m / 2
+        self.assertListEqual(
+            m3.data,
+            [
+                [0.5, 1.0],
+                [1.5, 2.0]
+            ]
+        )
+        self.assertTupleEqual(m3.shape, (2,2)) 
+        
     def test_rtruediv(self):
-        m3 = self.m / self.m2
-        print(m3)
+        m3 = self.m / 1
 
     # Errors
 
@@ -184,7 +191,7 @@ class TestMatrixOperations(unittest.TestCase):
     def test_radd_errors(self):
         with self.assertRaises(TypeError):
             self.m + "string"
-
+            
     def test_sub_errors(self):
         with self.assertRaises(TypeError):
             self.m - "string"
@@ -193,25 +200,30 @@ class TestMatrixOperations(unittest.TestCase):
 
     def test_rsub_errors(self):
         with self.assertRaises(TypeError):
-            self.m + "string"
+            self.m + "string" 
         with self.assertRaises(ForbiddenOperation):
             self.m - self.m1
 
     def test_mul_errors(self):
+        with self.assertRaises(TypeError):
+            self.m + "string"
         with self.assertRaises(ForbiddenOperation):
-            pass
+            self.m1 * Vector(3)
+        with self.assertRaises(ForbiddenOperation):
+            self.m1 * self.m
 
     def test_rmul_errors(self):
-        with self.assertRaises(ForbiddenOperation):
-            pass
+        with self.assertRaises(TypeError):
+            self.m + "string"
 
     def test_truediv_errors(self):
-        with self.assertRaises(ForbiddenOperation):
-            pass
+        with self.assertRaises(TypeError):
+            self.m1 / "string"
+            
 
     def test_rtruediv_errors(self):
-        with self.assertRaises(ForbiddenOperation):
-            pass
+        with self.assertRaises(TypeError):
+            self.m1 / "string"
 
 
 if __name__ == "__main__":
