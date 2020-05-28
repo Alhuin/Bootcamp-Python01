@@ -6,8 +6,11 @@ try:
     from ex02.vector import Vector
     from matrix import Matrix, InitMatrixError, ForbiddenOperation
 except ModuleNotFoundError:
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/ex02")
+    sys.path.append(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__)))
+    )
+    sys.path.append(os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))) + "/ex02")
     from ex02.vector import Vector
     from matrix import Matrix, InitMatrixError, ForbiddenOperation
 
@@ -177,7 +180,7 @@ class TestMatrixOperations(unittest.TestCase):
                 [1.5, 2.0]
             ]
         )
-        self.assertTupleEqual(m3.shape, (2,2))
+        self.assertTupleEqual(m3.shape, (2, 2))
 
     def test_rtruediv(self):
         m3 = self.m / 1
@@ -219,7 +222,6 @@ class TestMatrixOperations(unittest.TestCase):
     def test_truediv_errors(self):
         with self.assertRaises(TypeError):
             self.m1 / "string"
-
 
     def test_rtruediv_errors(self):
         with self.assertRaises(TypeError):
